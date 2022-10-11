@@ -1,0 +1,6 @@
+github.com/bdxygy/exception v1.0.0 h1:SVoko6yqIBpl80H8ORzPcUpr/GIdhleOIZ4RiM+BJbE=
+github.com/bdxygy/exception v1.0.0/go.mod h1:seCaSK/D2TqCss8I72j3q1WGotqEr1C4RG5BqX8ieUc=
+github.com/bdxygy/uid/v2 v2.0.0-20221011035144-f2f69b23e02e h1:hrfum4IBFYJY2MA3+rl8DknaneMfZUFYZD89rtH81wU=
+github.com/bdxygy/uid/v2 v2.0.0-20221011035144-f2f69b23e02e/go.mod h1:E8eYn2/1rWrH+y0rWNDdMP0j7oeEAGo18HFNUAhfv/A=
+github.com/google/uuid v1.3.0 h1:t6JiXgmwXMjEs8VusXIJk2BXHsn+wx8BZdTaoZ5fu7I=
+github.com/google/uuid v1.3.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
