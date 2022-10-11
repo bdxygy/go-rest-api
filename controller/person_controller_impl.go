@@ -10,7 +10,11 @@ import (
 )
 
 type PersonControllerImpl struct {
-	*service.PersonServiceImpl
+	service.PersonService
+}
+
+func NewPersonControllerImpl(personService service.PersonService) PersonController {
+	return &PersonControllerImpl{PersonService: personService}
 }
 
 func (controller *PersonControllerImpl) Create(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
@@ -19,7 +23,7 @@ func (controller *PersonControllerImpl) Create(w http.ResponseWriter, r *http.Re
 	err := decoder.Decode(&personCreateRequest)
 	exception.Throw(err)
 
-	personResponseEntity := controller.PersonServiceImpl.Create(r.Context(), personCreateRequest)
+	personResponseEntity := controller.PersonService.Create(r.Context(), personCreateRequest)
 
 	response := entity.ResponseEntity{
 		Code:    200,
@@ -43,7 +47,7 @@ func (controller *PersonControllerImpl) Update(w http.ResponseWriter, r *http.Re
 
 	personUpdateRequest.UUID = params.ByName("personUUID")
 
-	personResponseEntity := controller.PersonServiceImpl.Create(r.Context(), personUpdateRequest)
+	personResponseEntity := controller.PersonService.Create(r.Context(), personUpdateRequest)
 
 	response := entity.ResponseEntity{
 		Code:    200,
@@ -59,7 +63,7 @@ func (controller *PersonControllerImpl) Update(w http.ResponseWriter, r *http.Re
 }
 
 func (controller *PersonControllerImpl) Delete(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	controller.PersonServiceImpl.Delete(r.Context(), params.ByName("personUUID"))
+	controller.PersonService.Delete(r.Context(), params.ByName("personUUID"))
 
 	response := entity.ResponseEntity{
 		Code:    200,
@@ -75,7 +79,7 @@ func (controller *PersonControllerImpl) Delete(w http.ResponseWriter, r *http.Re
 }
 
 func (controller *PersonControllerImpl) FindById(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	finded := controller.PersonServiceImpl.FindById(r.Context(), params.ByName("personUUID"))
+	finded := controller.PersonService.FindById(r.Context(), params.ByName("personUUID"))
 
 	response := entity.ResponseEntity{
 		Code:    200,
@@ -91,7 +95,7 @@ func (controller *PersonControllerImpl) FindById(w http.ResponseWriter, r *http.
 }
 
 func (controller *PersonControllerImpl) FindAll(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-	people := controller.PersonServiceImpl.FindAll(r.Context())
+	people := controller.PersonService.FindAll(r.Context())
 
 	response := entity.ResponseEntity{
 		Code:    200,

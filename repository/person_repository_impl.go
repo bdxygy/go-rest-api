@@ -13,6 +13,10 @@ import (
 type PersonRepositoryImpl struct {
 }
 
+func NewPersonRepositoryImpl() PersonRepository {
+	return &PersonRepositoryImpl{}
+}
+
 func (p *PersonRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx) []entity.PersonEntity {
 
 	sqlQuery := fmt.Sprintf("SELECT uuid, name, address, city, age FROM %s", "person")
