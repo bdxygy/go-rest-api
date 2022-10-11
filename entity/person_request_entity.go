@@ -1,8 +1,11 @@
 package entity
 
 type PersonCreateOrUpdateRequestEntity struct {
-	UUID, Name, Address, City string
-	Age                       int8
+	UUID    string
+	Name    string `validate:"required"`
+	Address string
+	City    string
+	Age     int8
 }
 
 type PersonFindByIdOrDeleteEntity struct {

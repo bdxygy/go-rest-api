@@ -7,11 +7,13 @@ import (
 	"github.com/bdxygy/go-rest-api/entity"
 	"github.com/bdxygy/go-rest-api/helper"
 	"github.com/bdxygy/go-rest-api/repository"
+	"github.com/go-playground/validator/v10"
 )
 
 type PersonServiceImpl struct {
 	*sql.DB
 	repository.PersonRepositoryImpl
+	*validator.Validate
 }
 
 func (service *PersonServiceImpl) FindAll(ctx context.Context) []entity.PersonResponseEntity {
@@ -46,6 +48,9 @@ func (service *PersonServiceImpl) FindById(ctx context.Context, personUUID strin
 }
 
 func (service *PersonServiceImpl) Update(ctx context.Context, personEntity entity.PersonCreateOrUpdateRequestEntity) entity.PersonResponseEntity {
+	err := service.Validate.Struct(personEntity)
+	exception.Throw(err)
+
 	tx, err := service.DB.Begin()
 	exception.Throw(err)
 	defer helper.DeferCommit(tx)
@@ -76,6 +81,9 @@ func (service *PersonServiceImpl) Delete(ctx context.Context, personUUID string)
 }
 
 func (service *PersonServiceImpl) Create(ctx context.Context, personEntity entity.PersonCreateOrUpdateRequestEntity) entity.PersonResponseEntity {
+	err := service.Validate.Struct(personEntity)
+	exception.Throw(err)
+
 	tx, err := service.DB.Begin()
 	exception.Throw(err)
 	defer helper.DeferCommit(tx)
