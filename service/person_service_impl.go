@@ -22,7 +22,7 @@ func (service *PersonServiceImpl) FindAll(ctx context.Context) []entity.PersonRe
 	people := service.PersonRepositoryImpl.FindAll(ctx, tx)
 
 	var responses []entity.PersonResponseEntity
-	
+
 	for i := 0; i < len(people); i++ {
 
 		person := helper.TransformResponse(people[i])
@@ -50,15 +50,16 @@ func (service *PersonServiceImpl) Update(ctx context.Context, personEntity entit
 	exception.Throw(err)
 	defer helper.DeferCommit(tx)
 
-	paramPerson := entity.PersonEntity{
-		UUID:    personEntity.UUID,
-		Name:    personEntity.Name,
-		Address: personEntity.Address,
-		City:    personEntity.City,
-		Age:     personEntity.Age,
-	}
+	finded, err := service.PersonRepositoryImpl.FindById(ctx, tx, personEntity.UUID)
+	exception.Throw(err)
 
-	updated := service.PersonRepositoryImpl.Update(ctx, tx, paramPerson)
+	finded.UUID = personEntity.UUID
+	finded.Age = personEntity.Age
+	finded.Name = personEntity.Name
+	finded.City = personEntity.City
+	finded.Address = personEntity.Address
+
+	updated := service.PersonRepositoryImpl.Update(ctx, tx, finded)
 
 	return helper.TransformResponse(updated)
 }
@@ -68,7 +69,10 @@ func (service *PersonServiceImpl) Delete(ctx context.Context, personUUID string)
 	exception.Throw(err)
 	defer helper.DeferCommit(tx)
 
-	service.PersonRepositoryImpl.Delete(ctx, tx, personUUID)
+	finded, err := service.PersonRepositoryImpl.FindById(ctx, tx, personUUID)
+	exception.Throw(err)
+
+	service.PersonRepositoryImpl.Delete(ctx, tx, finded.UUID)
 }
 
 func (service *PersonServiceImpl) Create(ctx context.Context, personEntity entity.PersonCreateOrUpdateRequestEntity) entity.PersonResponseEntity {
@@ -82,6 +86,7 @@ func (service *PersonServiceImpl) Create(ctx context.Context, personEntity entit
 		City:    personEntity.City,
 		Age:     personEntity.Age,
 	}
+
 	created := service.PersonRepositoryImpl.Create(ctx, tx, paramPerson)
 
 	return helper.TransformResponse(created)
