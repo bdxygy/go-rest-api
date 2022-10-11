@@ -12,7 +12,7 @@ import (
 
 type PersonServiceImpl struct {
 	*sql.DB
-	repository.PersonRepositoryImpl
+	*repository.PersonRepositoryImpl
 	*validator.Validate
 }
 
