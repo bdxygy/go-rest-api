@@ -20,8 +20,9 @@ func (service *PersonServiceImpl) FindAll(ctx context.Context) []entity.PersonRe
 	defer helper.DeferCommit(tx)
 
 	people := service.PersonRepositoryImpl.FindAll(ctx, tx)
-	responses := []entity.PersonResponseEntity{}
 
+	var responses []entity.PersonResponseEntity
+	
 	for i := 0; i < len(people); i++ {
 
 		person := helper.TransformResponse(people[i])
@@ -44,12 +45,20 @@ func (service *PersonServiceImpl) FindById(ctx context.Context, personUUID strin
 	return helper.TransformResponse(responsePerson)
 }
 
-func (service *PersonServiceImpl) Update(ctx context.Context, personEntity entity.PersonEntity) entity.PersonResponseEntity {
+func (service *PersonServiceImpl) Update(ctx context.Context, personEntity entity.PersonCreateOrUpdateRequestEntity) entity.PersonResponseEntity {
 	tx, err := service.DB.Begin()
 	exception.Throw(err)
 	defer helper.DeferCommit(tx)
 
-	updated := service.PersonRepositoryImpl.Update(ctx, tx, personEntity)
+	paramPerson := entity.PersonEntity{
+		UUID:    personEntity.UUID,
+		Name:    personEntity.Name,
+		Address: personEntity.Address,
+		City:    personEntity.City,
+		Age:     personEntity.Age,
+	}
+
+	updated := service.PersonRepositoryImpl.Update(ctx, tx, paramPerson)
 
 	return helper.TransformResponse(updated)
 }
@@ -62,12 +71,18 @@ func (service *PersonServiceImpl) Delete(ctx context.Context, personUUID string)
 	service.PersonRepositoryImpl.Delete(ctx, tx, personUUID)
 }
 
-func (service *PersonServiceImpl) Create(ctx context.Context, personEntity entity.PersonEntity) entity.PersonResponseEntity {
+func (service *PersonServiceImpl) Create(ctx context.Context, personEntity entity.PersonCreateOrUpdateRequestEntity) entity.PersonResponseEntity {
 	tx, err := service.DB.Begin()
 	exception.Throw(err)
 	defer helper.DeferCommit(tx)
 
-	created := service.PersonRepositoryImpl.Create(ctx, tx, personEntity)
+	paramPerson := entity.PersonEntity{
+		Name:    personEntity.Name,
+		Address: personEntity.Address,
+		City:    personEntity.City,
+		Age:     personEntity.Age,
+	}
+	created := service.PersonRepositoryImpl.Create(ctx, tx, paramPerson)
 
 	return helper.TransformResponse(created)
 }

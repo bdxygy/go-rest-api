@@ -1,8 +1,8 @@
 package entity
 
 type PersonCreateOrUpdateRequestEntity struct {
-	Name, Address, City string
-	Age                 int8
+	UUID, Name, Address, City string
+	Age                       int8
 }
 
 type PersonFindByIdOrDeleteEntity struct {
